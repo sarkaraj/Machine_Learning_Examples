@@ -57,6 +57,7 @@ clf.fit(X_train, y_train)
 confidence = clf.score(X_test, y_test)
 print(confidence)
 
+# # Testing r-square values for different kernel methods
 # for k in ['linear','poly','rbf','sigmoid']:
 #     clf = svm.SVR(kernel=k)
 #     clf.fit(X_train, y_train)
