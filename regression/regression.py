@@ -1,12 +1,11 @@
 import math
-import pickle
 import warnings
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from matplotlib import style
-from sklearn import preprocessing, model_selection
+from sklearn import preprocessing, cross_validation
 from sklearn.linear_model import LinearRegression
 
 from yahoo_fin_api import get_stock_data_current
@@ -40,7 +39,7 @@ df.fillna(value=-99999, inplace=True)
 
 # Defining the size of the estimation --> Estimate until 1% of the len(dataframe). For example if dataframe is for
 # 100 days then it will estimate data points of 1 day.
-forecast_out = int(math.ceil(0.01 * len(df)))
+forecast_out = int(math.ceil(0.1 * len(df)))
 
 # Shifting the 'Adjusted Close' column by the number of days to be forecast, adding to columns 'label'.
 # This is the actual y variable in consideration
@@ -68,7 +67,7 @@ y = np.array(df['label'])
 print "Data processing for regression completed"
 
 # Data is split into train and test set. 20% of data is kept as test set.
-X_train, X_test, y_train, y_test = model_selection.train_test_split(X, y, test_size=0.2)
+X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, y, test_size=0.2)
 
 # Defining classifier method as Ordinary Least Square Linear Regression. n_jobs = -1 => implying all cpu's will be used
 # Good for training models when data set is large.
@@ -79,8 +78,8 @@ clf.fit(X_train, y_train)
 confidence = clf.score(X_test, y_test)
 print(confidence)
 
-with open('models/regression/linearregression_5Y_10PCT_C.pickle','wb') as f:
-    pickle.dump(clf, f)
+# with open('models/regression/linearregression_5Y_10PCT_C.pickle','wb') as f:
+#     pickle.dump(clf, f)
 
 # Predicting values
 forecast_set = clf.predict(X_predict)
